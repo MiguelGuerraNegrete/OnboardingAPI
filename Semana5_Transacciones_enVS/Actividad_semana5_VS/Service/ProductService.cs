@@ -11,17 +11,14 @@ namespace Actividad_semana4_VS.Service
         {
             _context = dbcontext;
         }
+
         public async Task<IEnumerable<Product>> GetAllProductsAsync() => await _context.Products.ToListAsync();
 
         public async Task<Product> GetProductByIdAsync(int productId)
         {
-            var currenteProduct = await _context.Products.FindAsync(productId);
+            var currentProduct = await _context.Products.FindAsync(productId);
 
-            if (currenteProduct == null)
-            {
-                throw new Exception($"El Cliente con  el ID {productId} no encontrado.");
-            }
-            return currenteProduct;
+            return currentProduct ?? throw new Exception($"The product ID {productId}  NOT FOUND.");
         }
 
         public async Task SaveProductAsync(Product product)
@@ -32,24 +29,24 @@ namespace Actividad_semana4_VS.Service
 
         public async Task UpdateProductAsync(int ProductId, Product product)
         {
-            var productActual = _context.Products.Find(ProductId);
+            var updatedProduct = _context.Products.Find(ProductId);
 
-            if (productActual != null)
+            if (updatedProduct != null)
             {
-                productActual.ProductCode = product.ProductCode;
-                productActual.ProductName = product.ProductName;
-                productActual.ProductValue = product.ProductValue;
+                updatedProduct.ProductCode = product.ProductCode;
+                updatedProduct.ProductName = product.ProductName;
+                updatedProduct.ProductValue = product.ProductValue;
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task DeleteProductAsync(int ProductId)
         {
-            var productActual = _context.Products.Find(ProductId);
+            var productToDelete = _context.Products.Find(ProductId);
 
-            if (productActual != null)
+            if (productToDelete != null)
             {
-                _context.Remove(productActual);
+                _context.Remove(productToDelete);
                 await _context.SaveChangesAsync();
             }
         }

@@ -15,12 +15,11 @@ namespace Actividad_semana4_VS.Service
 
         public async Task<IEnumerable<Client>> GetAllClientsAsync() => await _context.Clients.ToListAsync();
 
-        public async Task<Client> GetClientByIdAsync(int clientId) => await _context.Clients.FindAsync(clientId);
-        //if (currentClient == null)
-        //{
-        //    throw new Exception($"El Cliente con  el ID {clientId} no encontrado.");
-        //}
-        //return currentClient;
+        public async Task<Client> GetClientByIdAsync(int clientId)
+        {
+            var currenteClient = await _context.Clients.FindAsync(clientId);
+            return currenteClient ?? throw new Exception($"The Client ID {clientId} NOT FOUND.");
+        }
 
         public async Task SaveNewClientAsync(Client client)
         {

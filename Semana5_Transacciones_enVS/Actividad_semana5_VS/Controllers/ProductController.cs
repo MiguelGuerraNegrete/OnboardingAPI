@@ -7,37 +7,45 @@ namespace Actividad_semana4_VS.Controllers
     [Route("api/v1/[controller]")]
     public class ProductController : ControllerBase
     {
-        IProductService productService;
+        private readonly IProductService _productService;
 
         public ProductController(IProductService service)
         {
-            productService = service;
+            _productService = service;
         }
 
         [HttpGet]
-        public IActionResult GetProduct()
+        public async Task<IActionResult> GetProduct()
         {
-            return Ok(productService.GetAllProductsAsync());
+            var AllProducts = await _productService.GetAllProductsAsync();
+            return Ok(AllProducts);
+        }
+
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetProductById(int productId)
+        {
+            var expectedProduct = await _productService.GetProductByIdAsync(productId);
+            return Ok(expectedProduct);
         }
 
         [HttpPost]
         public IActionResult PostProduct([FromBody] Product product)
         {
-            productService.SaveProductAsync(product);
+            _productService.SaveProductAsync(product);
             return Ok();
         }
 
         [HttpPut("{ProductId}")]
-        public IActionResult PutProduct(int ProductId, [FromBody] Product product)
+        public async Task<IActionResult> PutProduct(int ProductId, [FromBody] Product product)
         {
-            productService.UpdateProductAsync(ProductId, product);
+            await _productService.UpdateProductAsync(ProductId, product);
             return Ok();
         }
 
         [HttpDelete("{ProductId}")]
-        public IActionResult DeleteProduct(int ProductId)
+        public async Task<IActionResult> DeleteProduct(int ProductId)
         {
-            productService.DeleteProductAsync(ProductId);
+            await _productService.DeleteProductAsync(ProductId);
             return Ok();
         }
     }

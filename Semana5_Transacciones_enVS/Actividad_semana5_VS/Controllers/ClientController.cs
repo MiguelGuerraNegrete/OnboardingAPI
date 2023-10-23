@@ -8,7 +8,6 @@ namespace Actividad_semana4_VS.Controllers
     [Route("api/v1/[controller]")]
     public class ClientController : ControllerBase
     {
-
         private readonly IClientService _clientService;
 
         public ClientController(IClientService service)
@@ -26,28 +25,37 @@ namespace Actividad_semana4_VS.Controllers
         [HttpGet("{clientId}")]
         public async Task<IActionResult> GetClientById(int clientId)
         {
-            var SpectedClient = await _clientService.GetClientByIdAsync(clientId);
-            return Ok(SpectedClient);
+            var expectedClient = await _clientService.GetClientByIdAsync(clientId);
+            return Ok(expectedClient);
         }
 
         [HttpPost]
-        public IActionResult PostClient([FromBody] Client client)
+        public async Task<IActionResult> PostClient([FromBody] Client client)
         {
-            _clientService.SaveNewClientAsync(client);
+            //try
+            //{
+            //    await _clientService.SaveNewClientAsync(client);
+            //    return CreatedAtAction(nameof(GetClientById), new { clientId = client.ClientId }, client);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            //}
+            await _clientService.SaveNewClientAsync(client);
             return Ok();
         }
 
         [HttpPut("{clientId}")]
-        public IActionResult PutClient(int clientId, [FromBody] Client client)
+        public async Task<IActionResult> PutClient(int clientId, [FromBody] Client client)
         {
-            _clientService.UpdateClientAsync(clientId, client);
+            await _clientService.UpdateClientAsync(clientId, client);
             return Ok();
         }
 
         [HttpDelete("{clientId}")]
-        public IActionResult Delete(int clientId)
+        public async Task<IActionResult> Delete(int clientId)
         {
-            _clientService.DeleteClientAsync(clientId);
+            await _clientService.DeleteClientAsync(clientId);
             return Ok();
         }
     }

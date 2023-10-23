@@ -8,11 +8,11 @@ namespace Actividad_semana4_VS.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ProjectContext dbcontext;
-        private readonly IOrderService orderService;
+        private readonly IOrderService _orderService;
 
         public OrderController(IOrderService service, ProjectContext db)
         {
-            orderService = service;
+            _orderService = service;
             dbcontext = db;
         }
 
@@ -25,35 +25,38 @@ namespace Actividad_semana4_VS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetOrders()
         {
-            return Ok(orderService.GetAllOrdersAsync());
+            var AllOrders = await _orderService.GetAllOrdersAsync();
+            return Ok(AllOrders);
         }
 
         [HttpGet("{orderId}")]
-        public IActionResult GetOrderById(long orderId)
+        public async Task<IActionResult> GetOrderById(long orderId)
         {
-            return Ok(orderService.GetOrdertByIdAsync(orderId));
+            var expectedClient = await _orderService.GetOrdertByIdAsync(orderId);
+            return Ok(expectedClient);
+           
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Order order)
+        public async Task<IActionResult> Post([FromBody] Order order)
         {
-            orderService.SaveNewOrderAsync(order);
+            await _orderService.SaveNewOrderAsync(order);
             return Ok();
         }
 
         [HttpPut("{orderId}")]
-        public IActionResult Put(long orderId, [FromBody] Order order)
+        public async Task<IActionResult> Put(long orderId, [FromBody] Order order)
         {
-            orderService.UpdateOrderAsync(orderId, order);
+            await _orderService.UpdateOrderAsync(orderId, order);
             return Ok();
         }
 
         [HttpDelete("{orderId}")]
-        public IActionResult Delete(long orderId)
+        public async Task<IActionResult> Delete(long orderId)
         {
-            orderService.DeleteOrderAsync(orderId);
+            await _orderService.DeleteOrderAsync(orderId);
             return Ok();
         }
     }

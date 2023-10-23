@@ -13,25 +13,16 @@ namespace Actividad_semana4_VS.Service
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync() => await _context.Orders.ToListAsync();
-
-
         public async Task<Order> GetOrdertByIdAsync(long orderId)
         {
-            var currentOrder = await _context.Orders.FindAsync(orderId);
-
-            if (currentOrder == null)
-            {
-                throw new Exception($"El Cliente con  el ID {orderId} no encontrado.");
-            }
-            return currentOrder;
+            var curretOrder = await _context.Orders.FindAsync(orderId);
+            return curretOrder ?? throw new Exception($"The order ID {orderId} NOT FOUND."); 
         }
 
         public async Task SaveNewOrderAsync(Order order)
         {
-           
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-   
         }
 
 
