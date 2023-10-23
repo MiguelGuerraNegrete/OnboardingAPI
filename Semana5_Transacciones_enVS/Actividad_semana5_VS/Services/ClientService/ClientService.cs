@@ -1,4 +1,5 @@
 ﻿using Actividad_semana4_VS.Model;
+using Actividad_semana5_VS.Service;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -13,23 +14,27 @@ namespace Actividad_semana4_VS.Service
             _context = dbcontext;
         }
 
-        public async Task<IEnumerable<Client>> GetAllClientsAsync() => await _context.Clients.ToListAsync();
+        public async Task<IEnumerable<Client>> ObtainAllAsync() => await _context.Clients.ToListAsync();
 
-        public async Task<Client> GetClientByIdAsync(int clientId)
+        public async Task<Client> ObtainByIdAsync(int clientId)
         {
             var currenteClient = await _context.Clients.FindAsync(clientId);
-            return currenteClient ?? throw new Exception($"The Client ID {clientId} NOT FOUND.");
+            if (currenteClient == null)
+            {
+                return new Client();
+            }
+            return currenteClient;
         }
 
-        public async Task SaveNewClientAsync(Client client)
+        public async Task SaveAsync(Client client)
         {
-            _context.Add(client);
+            await _context.AddAsync(client);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateClientAsync(int clientId, Client client)
+        public async Task UpdateAsync(int clientId, Client client)
         {
-            var currentclient = _context.Clients.Find(clientId);
+            var currentclient = await _context.Clients.FindAsync(clientId);
 
             if (currentclient != null)
             {
@@ -40,9 +45,9 @@ namespace Actividad_semana4_VS.Service
             }
         }
 
-        public async Task DeleteClientAsync(int clientId)
+        public async Task EraseAsync(int clientId)
         {
-            var clientActual = _context.Clients.Find(clientId);
+            var clientActual = await _context.Clients.FindAsync(clientId);
 
             if (clientActual != null)
             {
@@ -53,12 +58,4 @@ namespace Actividad_semana4_VS.Service
 
     }
 
-    public interface IClientService
-    {
-        Task<IEnumerable<Client>> GetAllClientsAsync();
-        Task<Client> GetClientByIdAsync(int clientId);
-        Task SaveNewClientAsync(Client client);
-        Task UpdateClientAsync(int ClientId, Client client);
-        Task DeleteClientAsync(int ClientId);
-    }
 }

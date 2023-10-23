@@ -1,5 +1,5 @@
 ﻿using Actividad_semana4_VS.Model;
-using Actividad_semana4_VS.Service;
+using Actividad_semana5_VS.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,46 +16,37 @@ namespace Actividad_semana4_VS.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetClients()
+        public async Task<IActionResult> GetAsync()
         {
-            var AllClients = await _clientService.GetAllClientsAsync();
-            return Ok(AllClients);
+            var allClients = await _clientService.ObtainAllAsync();
+            return Ok(allClients);
         }
 
         [HttpGet("{clientId}")]
-        public async Task<IActionResult> GetClientById(int clientId)
+        public async Task<IActionResult> GetProductByIdAsync(int clientId)
         {
-            var expectedClient = await _clientService.GetClientByIdAsync(clientId);
+            var expectedClient = await _clientService.ObtainByIdAsync(clientId);
             return Ok(expectedClient);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostClient([FromBody] Client client)
+        public async Task<IActionResult> PostAsync([FromBody] Client client)
         {
-            //try
-            //{
-            //    await _clientService.SaveNewClientAsync(client);
-            //    return CreatedAtAction(nameof(GetClientById), new { clientId = client.ClientId }, client);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            //}
-            await _clientService.SaveNewClientAsync(client);
+            await _clientService.SaveAsync(client);
             return Ok();
         }
 
         [HttpPut("{clientId}")]
-        public async Task<IActionResult> PutClient(int clientId, [FromBody] Client client)
+        public async Task<IActionResult> PutAsync(int clientId, [FromBody] Client client)
         {
-            await _clientService.UpdateClientAsync(clientId, client);
+            await _clientService.UpdateAsync(clientId, client);
             return Ok();
         }
 
         [HttpDelete("{clientId}")]
-        public async Task<IActionResult> Delete(int clientId)
+        public async Task<IActionResult> DeleteProductAsync(int clientId)
         {
-            await _clientService.DeleteClientAsync(clientId);
+            await _clientService.EraseAsync(clientId);
             return Ok();
         }
     }

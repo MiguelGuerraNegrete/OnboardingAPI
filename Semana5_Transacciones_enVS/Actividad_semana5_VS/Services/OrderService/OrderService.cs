@@ -1,7 +1,8 @@
-﻿using Actividad_semana4_VS.Model;
+﻿using Actividad_semana4_VS;
+using Actividad_semana4_VS.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace Actividad_semana4_VS.Service
+namespace Actividad_semana5_VS.Service
 {
     public class OrderService : IOrderService
     {
@@ -12,23 +13,27 @@ namespace Actividad_semana4_VS.Service
             _context = dbcontext;
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync() => await _context.Orders.ToListAsync();
-        public async Task<Order> GetOrdertByIdAsync(long orderId)
+        public async Task<IEnumerable<Order>> ObtainAllAsync() => await _context.Orders.ToListAsync();
+        public async Task<Order> ObtainByIdAsync(long orderId)
         {
             var curretOrder = await _context.Orders.FindAsync(orderId);
-            return curretOrder ?? throw new Exception($"The order ID {orderId} NOT FOUND."); 
+            if (curretOrder == null)
+            {
+                return new Order();
+            }
+            return curretOrder;
         }
 
-        public async Task SaveNewOrderAsync(Order order)
+        public async Task SaveNewAsync(Order order)
         {
-            _context.Orders.Add(order);
+            await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
 
 
-        public async Task UpdateOrderAsync(long orderId, Order order)
+        public async Task UpdateAsync(long orderId, Order order)
         {
-            var currentOrder = _context.Orders.Find(orderId);
+            var currentOrder = await _context.Orders.FindAsync(orderId);
 
             if (currentOrder != null)
             {
@@ -41,7 +46,7 @@ namespace Actividad_semana4_VS.Service
             }
         }
 
-        public async Task DeleteOrderAsync(long orderId)
+        public async Task EreaseAsync(long orderId)
         {
             var orderActal = _context.Orders.Find(orderId);
 
@@ -52,14 +57,5 @@ namespace Actividad_semana4_VS.Service
             }
         }
 
-    }
-
-    public interface IOrderService
-    {
-        Task<IEnumerable<Order>> GetAllOrdersAsync();
-        Task<Order> GetOrdertByIdAsync(long orderId);
-        Task SaveNewOrderAsync(Order order);
-        Task UpdateOrderAsync(long orderId, Order order);
-        Task DeleteOrderAsync(long orderId);
     }
 }

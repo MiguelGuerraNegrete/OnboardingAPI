@@ -1,5 +1,5 @@
 ﻿using Actividad_semana4_VS.Model;
-using Actividad_semana4_VS.Service;
+using Actividad_semana5_VS.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Actividad_semana4_VS.Controllers
@@ -25,38 +25,38 @@ namespace Actividad_semana4_VS.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var AllOrders = await _orderService.GetAllOrdersAsync();
-            return Ok(AllOrders);
+            var allOrders = await _orderService.ObtainAllAsync();
+            return Ok(allOrders);
         }
 
         [HttpGet("{orderId}")]
-        public async Task<IActionResult> GetOrderById(long orderId)
+        public async Task<IActionResult> GetByIdAsync(long orderId)
         {
-            var expectedClient = await _orderService.GetOrdertByIdAsync(orderId);
+            var expectedClient = await _orderService.ObtainByIdAsync(orderId);
             return Ok(expectedClient);
            
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Order order)
+        public async Task<IActionResult> PostAsync([FromBody] Order order)
         {
-            await _orderService.SaveNewOrderAsync(order);
+            await _orderService.SaveNewAsync(order);
             return Ok();
         }
 
         [HttpPut("{orderId}")]
-        public async Task<IActionResult> Put(long orderId, [FromBody] Order order)
+        public async Task<IActionResult> PutAsync(long orderId, [FromBody] Order order)
         {
-            await _orderService.UpdateOrderAsync(orderId, order);
+            await _orderService.UpdateAsync(orderId, order);
             return Ok();
         }
 
         [HttpDelete("{orderId}")]
-        public async Task<IActionResult> Delete(long orderId)
+        public async Task<IActionResult> DeleteAsync(long orderId)
         {
-            await _orderService.DeleteOrderAsync(orderId);
+            await _orderService.EreaseAsync(orderId);
             return Ok();
         }
     }
