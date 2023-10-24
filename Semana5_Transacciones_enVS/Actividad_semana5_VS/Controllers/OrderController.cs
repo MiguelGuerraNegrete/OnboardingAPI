@@ -1,5 +1,5 @@
 ﻿using Actividad_semana4_VS.Model;
-using Actividad_semana4_VS.Service;
+using Actividad_semana5_VS.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Actividad_semana4_VS.Controllers
@@ -8,11 +8,11 @@ namespace Actividad_semana4_VS.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ProjectContext dbcontext;
-        private readonly IOrderService orderService;
+        private readonly IOrderService _orderService;
 
         public OrderController(IOrderService service, ProjectContext db)
         {
-            orderService = service;
+            _orderService = service;
             dbcontext = db;
         }
 
@@ -25,35 +25,38 @@ namespace Actividad_semana4_VS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(orderService.GetAllOrdersAsync());
+            var allOrders = await _orderService.ObtainAllAsync();
+            return Ok(allOrders);
         }
 
         [HttpGet("{orderId}")]
-        public IActionResult GetOrderById(long orderId)
+        public async Task<IActionResult> GetByIdAsync(long orderId)
         {
-            return Ok(orderService.GetOrdertByIdAsync(orderId));
+            var expectedClient = await _orderService.ObtainByIdAsync(orderId);
+            return Ok(expectedClient);
+           
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Order order)
+        public async Task<IActionResult> PostAsync([FromBody] Order order)
         {
-            orderService.SaveNewOrderAsync(order);
+            await _orderService.SaveNewAsync(order);
             return Ok();
         }
 
         [HttpPut("{orderId}")]
-        public IActionResult Put(long orderId, [FromBody] Order order)
+        public async Task<IActionResult> PutAsync(long orderId, [FromBody] Order order)
         {
-            orderService.UpdateOrderAsync(orderId, order);
+            await _orderService.UpdateAsync(orderId, order);
             return Ok();
         }
 
         [HttpDelete("{orderId}")]
-        public IActionResult Delete(long orderId)
+        public async Task<IActionResult> DeleteAsync(long orderId)
         {
-            orderService.DeleteOrderAsync(orderId);
+            await _orderService.EreaseAsync(orderId);
             return Ok();
         }
     }
