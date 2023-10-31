@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\AppTransaction.Infraestructure.API.props" />
+</Project>

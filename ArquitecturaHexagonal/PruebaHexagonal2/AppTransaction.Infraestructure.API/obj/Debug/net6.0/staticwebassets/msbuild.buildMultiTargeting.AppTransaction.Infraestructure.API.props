@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\AppTransaction.Infraestructure.API.props" />
+</Project>
